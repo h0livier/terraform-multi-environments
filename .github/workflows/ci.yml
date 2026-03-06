@@ -1,0 +1,29 @@
+name: Terraform CI
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    validate:
+        runs-on: ubuntu-latest
+        strategy:
+          fail-fast: false
+          matrix:
+            chdir:
+              - envs/dev
+              - envs/prod
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+
+            - name: Validate Terraform (${{ matrix.chdir }})
+              shell: bash
+              run: |
+                terraform -chdir=${{ matrix.chdir }} init -backend=false -input=false
+                terraform -chdir=${{ matrix.chdir }} validate
