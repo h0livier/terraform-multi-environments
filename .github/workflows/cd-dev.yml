@@ -1,0 +1,26 @@
+name: CD Terraform
+
+on:
+    workflow_dispatch:
+        inputs:
+            chdir:
+                description: 'The directory to run terraform validate in'
+                required: true
+                type: choice
+                options:
+                    - envs/dev
+                    - envs/prod
+
+jobs:
+    validate:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+
+            - name: Apply Terraform (${{ inputs.chdir }})
+              shell: bash
+              run: terraform -chdir=${{ inputs.chdir }} apply -auto-approve
