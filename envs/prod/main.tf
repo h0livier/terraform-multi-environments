@@ -2,7 +2,7 @@ module "prod_project" {
   source = "./../../src"
 
   resource_group = {
-    name     = "prod-rg"
+    name     = "ohay-prod-rg"
     location = "West Europe"
   }
 }
