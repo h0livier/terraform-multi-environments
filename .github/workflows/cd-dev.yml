@@ -21,6 +21,19 @@ jobs:
             - name: Setup Terraform
               uses: hashicorp/setup-terraform@v3
 
+            - name: Azure Login
+              uses: azure/login@v2
+              with:
+                client-id: ${{ secrets.AZURE_CLIENT_ID }}
+                tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+                subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+            - name: Validate Terraform (${{ inputs.chdir }})
+              shell: bash
+              run: |
+                terraform -chdir=${{ inputs.chdir }} init
+                terraform -chdir=${{ inputs.chdir }} validate
+
             - name: Apply Terraform (${{ inputs.chdir }})
               shell: bash
               run: terraform -chdir=${{ inputs.chdir }} apply -auto-approve
